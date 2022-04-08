@@ -27,6 +27,8 @@ public:
     //  Member functions
     //==================================================
 
+    std::queue<std::shared_ptr<Thread>> q; 
+
     FCFSScheduler(int slice = -1);
 
     std::shared_ptr<SchedulingDecision> get_next_thread();
