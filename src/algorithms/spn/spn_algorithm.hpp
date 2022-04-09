@@ -27,7 +27,7 @@ public:
     //==================================================
     //  Member functions
     //==================================================
-    Stable_Priority_Queue<std::shared_ptr<Thread>, std::vector<std::shared_ptr<Thread>>, first.. > q;
+    Stable_Priority_Queue<std::shared_ptr<Thread>> q;
 
     SPNScheduler(int slice = -1);
 

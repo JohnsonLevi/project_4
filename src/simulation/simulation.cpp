@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #include "algorithms/fcfs/fcfs_algorithm.hpp"
 // TODO: Include your other algorithms as you make them
@@ -204,8 +205,54 @@ void Simulation::handle_dispatcher_invoked(const std::shared_ptr<Event> event) {
 // Utility methods
 //==============================================================================
 
+//Implement System Stats 
+
 SystemStats Simulation::calculate_statistics() {
     // TODO: Calculate the system statistics
+    std::vector<double> turnAroundTime(4, 0);
+    std::vector<double> responseTime(4,0);
+    std::vector<int> num_threads(4,0);
+    //vector<int> turnAroundTime;
+    for(const auto i : processes){
+        for(auto j: i.second->threads){
+            this->system_stats.io_time += j->io_time;
+            this->system_stats.service_time += j->service_time;
+            if(j->priority == SYSTEM){
+                turnAroundTime[0] += j->turnaround_time();
+                responseTime[0] += j->response_time();
+                num_threads[0]++;
+            }else if(j->priority == INTERACTIVE){
+                turnAroundTime[1] += j->turnaround_time();
+                responseTime[1] += j->response_time();
+                num_threads[1]++;
+            }else if(j->priority == NORMAL){
+                turnAroundTime[2] += j->turnaround_time();
+                responseTime[2] += j->response_time();
+                num_threads[2]++;
+            }else{
+                turnAroundTime[3] += j->turnaround_time();
+                responseTime[3] += j->response_time();
+                num_threads[3]++;
+            }
+        } 
+    }//total time - total idle time / total time
+    for(int i = 0; i < 4; ++i){
+        this->system_stats.thread_counts[i] = num_threads[i];
+        if(num_threads[i] == 0){
+            this->system_stats.avg_thread_turnaround_times[i] = 0;
+            this->system_stats.avg_thread_response_times[i] = 0;
+        }else{
+            this->system_stats.avg_thread_turnaround_times[i] = turnAroundTime[i] / num_threads[i];
+            this->system_stats.avg_thread_response_times[i] = responseTime[i] / num_threads[i];
+        }
+    }
+    system_stats.total_idle_time = system_stats.total_time - system_stats.service_time - system_stats.dispatch_time;
+    this->system_stats.total_cpu_time = this->system_stats.service_time + this->system_stats.dispatch_time;
+    //this->system_stats.total_idle_time = this->system_stats.total_time - system_stats.dispatch_time;
+
+    this->system_stats.cpu_utilization = 100*(static_cast<double>(this->system_stats.total_time - this->system_stats.total_idle_time)/static_cast<double>(this->system_stats.total_time));
+    system_stats.cpu_efficiency = 100*(static_cast<double>(system_stats.service_time)/static_cast<double>(system_stats.total_time));
+    
     return this->system_stats;
 }
 
