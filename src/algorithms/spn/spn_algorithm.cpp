@@ -27,6 +27,7 @@ std::shared_ptr<SchedulingDecision> SPNScheduler::get_next_thread() {
         thread->thread = nullptr;
         thread->explanation = "No threads available for scheduling.";
     }
+ 
     return thread;
 }
 

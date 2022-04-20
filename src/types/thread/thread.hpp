@@ -159,6 +159,11 @@ public:
     */
     std::shared_ptr<Burst> pop_next_burst(BurstType type);
 
+
+    int mlfqQueue = 0;
+
+    int currentQueueRunTime = 0;
+
 };
 
 #endif

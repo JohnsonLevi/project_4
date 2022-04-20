@@ -35,6 +35,9 @@ public:
         //==================================================
         //  Member functions
         //==================================================
+        Stable_Priority_Queue<std::shared_ptr<Thread>> q;
+
+        int priority_counts[4] = {0,0,0,0};
 
         PRIORITYScheduler(int slice = -1);
 

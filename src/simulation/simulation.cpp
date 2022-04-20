@@ -3,6 +3,10 @@
 #include <vector>
 
 #include "algorithms/fcfs/fcfs_algorithm.hpp"
+#include "algorithms/spn/spn_algorithm.hpp"
+#include "algorithms/rr/rr_algorithm.hpp"
+#include "algorithms/priority/priority_algorithm.hpp"
+#include "algorithms/mlfq/mlfq_algorithm.hpp"
 // TODO: Include your other algorithms as you make them
 
 #include "simulation/simulation.hpp"
@@ -17,9 +21,21 @@ Simulation::Simulation(FlagOptions flags) {
         this->scheduler = std::make_shared<FCFSScheduler>();
 
     // TODO: Add your other algorithms as you make them
-    } else {
+    }else if(flags.scheduler == "SPN") {
+        this->scheduler = std::make_shared<SPNScheduler>();
+    }else if(flags.scheduler == "RR"){
+        if (flags.time_slice != -1){
+            this->scheduler = std::make_shared<RRScheduler>(flags.time_slice);
+        }else{
+            this->scheduler = std::make_shared<RRScheduler>();
+        }
+    }else if(flags.scheduler == "PRIORITY"){
+        this->scheduler = std::make_shared<PRIORITYScheduler>();
+    }else if(flags.scheduler == "MLFQ"){
+        this->scheduler = std::make_shared<MFLQScheduler>();
+    }else {
         throw("No scheduler found for " + flags.scheduler);        
-    }
+    } 
     this->flags = flags;
     this->logger = Logger(flags.verbose, flags.per_thread, flags.metrics);
 }

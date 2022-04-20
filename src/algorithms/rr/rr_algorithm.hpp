@@ -28,6 +28,7 @@ public:
     //==================================================
     //  Member functions
     //==================================================
+    std::queue<std::shared_ptr<Thread>> q; 
 
     RRScheduler(int slice = 3);
 

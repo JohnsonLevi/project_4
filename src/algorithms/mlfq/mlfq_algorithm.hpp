@@ -30,6 +30,8 @@ public:
     //  Member functions
     //==================================================
 
+    Stable_Priority_Queue<std::shared_ptr<Thread>> q[10];
+
     MFLQScheduler(int slice = -1);
 
     std::shared_ptr<SchedulingDecision> get_next_thread();
